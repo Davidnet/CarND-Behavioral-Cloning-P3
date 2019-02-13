@@ -1,0 +1,16 @@
+name: self-driving-project
+channels:
+    - conda-forge
+dependencies:
+    - python=3.6
+    - opencv
+    - pip
+    - fire
+    - pylint
+    - pep8
+    - tensorflow-gpu
+    - pandas
+    - ipython
+    - numpy
+    - python-socketio
+    - eventlet

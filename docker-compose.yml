@@ -1,0 +1,58 @@
+version: '2.3'
+
+services:
+
+  notebooks:
+    image: jupyter/tensorflow-notebook
+
+    volumes:
+      - ./:/code
+      - ./data:/data
+      - ./models:/models  
+
+    working_dir: /code/notebooks
+
+    ports:
+      - 8888:8888
+
+    command: jupyter lab --no-browser --allow-root --ip 0.0.0.0 --NotebookApp.custom_display_url=http://localhost:8888
+
+
+  ipython-shell:
+    build: .
+    runtime: nvidia
+
+    volumes:
+      - ./:/code
+      - ./data:/data
+      - ./models:/models
+
+    working_dir: /code/pilotnet
+
+    ports:
+      - 6006:6006
+
+    stdin_open: true
+    tty: true
+
+    command: ipython --TerminalInteractiveShell.editing_mode=vi
+
+  train:
+    build: .
+    runtime: nvidia
+
+    volumes:
+      - ./:/code
+      - ./data:/data
+      - ./models:/models
+
+    working_dir: /code/pilotnet
+
+    ports:
+      - 6006:6006
+
+    stdin_open: true
+    tty: true
+
+    # command: python german_traffic_main_densenet.py
+    command: ipython
