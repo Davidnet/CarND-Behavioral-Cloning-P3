@@ -1,0 +1,10 @@
+pyyaml
+fire
+dicto
+imgaug
+pandas
+python-socketio
+eventlet
+Flask
+matplotlib
+seaborn

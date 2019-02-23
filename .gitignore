@@ -1,6 +1,7 @@
 # Custom files and folder not for tracking
 data/
-models/
+# models/
+gcp-key.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

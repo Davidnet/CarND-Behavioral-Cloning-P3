@@ -1,0 +1,52 @@
+params:
+  network: relational
+  project: pilotnet_relational
+
+  # bins
+  nbins: 51
+
+  # dataset
+  angle_correction: 0.05
+  only_center_camera: False
+
+  # regularization
+  label_smoothing: 0.0
+  zeros_weight: 0.3
+  max_weight: 5.0
+  angle_noise_std: 0.0
+  l1_embeddings_regularization: 0.0
+  l2_regularization: 0.0
+  dropout: 0.15
+
+  # train
+  summary_steps: 200
+  max_steps: &max_steps 200000
+  save_checkpoints_steps: 5000
+  eval_steps: 20
+  start_delay_secs: 60
+  throttle_secs: 120
+
+  # pipeline
+  batch_size: 64
+  buffer_size: 1000
+  n_threads: 4
+
+  # image
+  image_height: 160
+  image_width: 320
+  crop_up: 50
+  crop_down: 25
+  resize_height: 66
+  resize_width: 200
+
+  # learning rate
+  cold_learning_rate:  0.000001
+  learning_rate: 0.01
+  final_learning_rate: 0.0001
+
+  cold_steps: 0
+  warmup_steps: 0
+  decay_steps: 200000
+
+  cold_steps: 0
+  warmup_steps: 0

@@ -54,5 +54,27 @@ services:
     stdin_open: true
     tty: true
 
-    # command: python german_traffic_main_densenet.py
     command: ipython
+
+  infer:
+    build: .
+    runtime: nvidia
+
+    volumes:
+      - ./:/code
+      - ./data:/data
+      - ./models:/models
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+    working_dir: /code
+
+    ports:
+      - 6006:6006
+      - 4567:4567 
+
+    stdin_open: true
+    tty: true
+
+
+    command: python3 -m pilotnet.run --export_dir /models/pilotnet_rel/export/pilotnet_relational/1550798369   
+

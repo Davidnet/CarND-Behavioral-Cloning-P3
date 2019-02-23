@@ -1,0 +1,9 @@
+# controller
+kp: 0.1
+ki: 0.002
+speed: 0.3
+
+plot: False
+# plot: True
+
+policy: mean

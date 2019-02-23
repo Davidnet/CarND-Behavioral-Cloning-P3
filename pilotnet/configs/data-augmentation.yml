@@ -1,0 +1,4 @@
+params:
+  augmentation_factor: 10
+  filters_repeat: 3
+  n_threads: 8

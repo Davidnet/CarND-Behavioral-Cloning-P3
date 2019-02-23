@@ -14,3 +14,6 @@ dependencies:
     - numpy
     - python-socketio
     - eventlet
+    - dask
+    - flask
+    - seaborn
