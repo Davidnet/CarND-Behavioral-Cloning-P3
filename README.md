@@ -4,122 +4,304 @@
 
 Overview
 ---
-This repository contains starting files for the Behavioral Cloning Project.
 
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to clone driving behavior. You will train, validate and test a model using Keras. The model will output a steering angle to an autonomous vehicle.
+This repo contains a tensorflow project for the Behavioral Cloning Project, as you can see in the following video we succesfully complete the task of copy the behaviour of a human driver on a track.
 
-We have provided a simulator where you can steer a car around a track for data collection. You'll use image data and steering angles to train a neural network and then use this model to drive the car autonomously around the track.
+[![solution](https://img.youtube.com/vi/VE5MoamYcgM/0.jpg)](https://www.youtube.com/watch?v=VE5MoamYcgM)
 
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
 
-To meet specifications, the project will require submitting five files: 
-* model.py (script used to create and train the model)
-* drive.py (script to drive the car - feel free to modify this file)
-* model.h5 (a trained Keras model)
-* a report writeup file (either markdown or pdf)
-* video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
 
-This README file describes how to output the video in the "Details About Files In This Directory" section.
-
-Creating a Great Writeup
+Pilotnet Module Overview:
 ---
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/432/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
+So we create a pilotnet module with the following module structure:
 
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
+```bash
+pilotnet/
+├── configs
+│   ├── data-augmentation.yml
+│   ├── run.yml
+│   └── train.yml
+├── data_augmentation.py
+├── data_pipelines.py
+├── estimator.py
+├── __init__.py
+├── model.py
+├── run.py
+├── scripts
+│   ├── data-augmentation.sh
+│   ├── get-training-data.sh
+│   └── train.sh
+├── test
+│   └── test_fire_dicto.py
+├── train.py
+└── utils.py
 
-The Project
+3 directories, 15 files
+```
+
+Let us navigate through that module, the first folder inside the pilotnet module is the configs files for each of the steps in the machine learning workflow: 
+
+- Data-augmentations.yml: Contains the parameters for the data augmentation pipeline. I use imgaug library for helping to create various folder with various degrees (ranging from simple to very agressive) to data augmentation.
+- run.yml: Contains the parameters for the module run.py that contains the logic for car that is being driven by a Relational Convulational Network.
+- train.yml: Since I had to do a lot of manual hyper-parameter search I created this train configs for easyness of searching of hyperparameters.
+
+For this project we use the Tensorflow Estimator API, the reason over Keras was because I wanted to have a reason to experiment with the distribuited training techniques provided by Tensorflow.
+
+Most of the modules can be accessed by python3 -m pilotnet.module, they also provide a -h help guide.
+Modules:
+
+- data_augmentation.py module thet contains the data augmentations pipeline per image.
+- data_pipelines.py module that contains the tf.data objects created by input and serving inputs.
+- estimator.py module that contains the estimator used by the tf training and eval loop for the model defined at model.py.
+- model.py Implementation of the relational convolutional net.
+- run.py the module that initates the loop for the web server application.
+- train.py The module for training the estimator object defined at estimator.py.
+- utils.py collection of utility function for the module.
+
+Finally there is a script folder that contains three bash executable files that:
+- data-augmentation.sh: A wrapper over the python module data_augmentation.py that creates 9 data_idx folders that have augmented images. (there are 9 different folders with various degrees of augmnetation).
+
+- get-training-data.sh: Downloads, and unzip the raw data and creates a data folder with the unaugmented data images.
+
+- train.sh: A bash file for training, you can modify to select which data folder to read (in this project we use data_3 the folder with medium augmentation).
+
+Finally at the root of the project we provide the following tree folder:
+
+```bash
+├── data                                                                                     
+│   ├── data                                                                                 
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_0                                                                               
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_1                                                                               
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_2                                                                               
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_3                                                                               
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_4                                                                               
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_5                                                                               
+│   │   ├── driving_log.csv                                                                  
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]                           
+│   ├── data_6
+│   │   ├── driving_log.csv
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]
+│   ├── data_7
+│   │   ├── driving_log.csv
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]
+│   ├── data_8
+│   │   ├── driving_log.csv
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]
+│   ├── data_9
+│   │   ├── driving_log.csv
+│   │   └── IMG [24108 entries exceeds filelimit, not opening dir]
+│   └── dataset.zip
+├── docker-compose.yml
+├── Dockerfile
+├── drive.py -> pilotnet/run.py
+├── enviroment.yml
+├── LICENSE
+├── model.h5
+├── model.py -> pilotnet/model.py
+├── models
+│   └── pilotnet_rel [20 entries exceeds filelimit, not opening dir]
+├── notebooks
+│   └── Data_Exploration.ipynb
+├── pilotnet
+│   ├── configs
+│   │   ├── data-augmentation.yml
+│   │   ├── run.yml
+│   │   └── train.yml
+│   ├── data_augmentation.py
+│   ├── data_pipelines.py
+│   ├── estimator.py
+│   ├── __init__.py
+│   ├── model.py
+│   ├── run.py
+│   ├── scripts
+│   │   ├── data-augmentation.sh
+│   │   ├── get-training-data.sh
+│   │   └── train.sh
+│   ├── test
+│   │   └── test_fire_dicto.py
+│   ├── train.py
+│   └── utils.py
+├── README.md
+└── requirements.txt
+```
+The root folder contains a `docker-compose.yml` that (if you have [nvidia-docker](https://github.com/NVIDIA/nvidia-docker)) should give you a docker container (please see the services in docker-container) that has all the requirements you need, to build the services:
+
+```bash
+$ docker-compose build
+``` 
+
+Should create all the docker images necesary to run the project.
+
+Let us then jump to the ml-workflow
+
+Raw Data and Data Augmentation
 ---
-The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior 
-* Design, train and validate a model that predicts a steering angle from image data
-* Use the model to drive the vehicle autonomously around the first track in the simulator. The vehicle should remain on the road for an entire loop around the track.
-* Summarize the results with a written report
 
-### Dependencies
-This lab requires:
+To get the raw data and unzip:
 
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
-
-The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
-
-The following resources can be found in this github repository:
-* drive.py
-* video.py
-* writeup_template.md
-
-The simulator can be downloaded from the classroom. In the classroom, we have also provided sample data that you can optionally use to help train your model.
-
-## Details About Files In This Directory
-
-### `drive.py`
-
-Usage of `drive.py` requires you have saved the trained model as an h5 file, i.e. `model.h5`. See the [Keras documentation](https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model) for how to create this file using the following command:
-```sh
-model.save(filepath)
+```bash
+$ bash pilotnet/scripts/get-training-data.sh
 ```
 
-Once the model has been saved, it can be used with drive.py using this command:
+The raw data contains images like this:
 
-```sh
-python drive.py model.h5
+raw data:
+![image0][image_0]
+
+To do the augmentation you can do:
+
+```bash
+$ docker-compose up augment-images
+```
+You will get data augmented folder such as:
+
+**Augmentation from slighty to heavy**
+
+Image 1:
+![image1][image_1]
+
+Image 2:
+![image2][image_2]
+
+Image 3:
+![image3][image_3]
+
+Image 4:
+![image4][image_4]
+
+Image 5:
+![image5][image_5]
+
+Image 6:
+![image6][image_6]
+
+Image 7:
+![image7][image_7]
+
+Image 8:
+![image8][image_8]
+
+Image 9:
+![image9][image_9]
+
+
+Having this kind of data-augmentation provides us a good-way to generalize.
+
+Technical notes: We use parallelism to make data-augmentation fast. We use dask for it.
+
+Model Architecture
+---
+
+Having the all the data on the data folder, we decide to experiment with different model arquitectures. At the end, I decided to implement a relational convolutional network based on the work of DeepMind. [Paper](https://arxiv.org/pdf/1706.01427.pdf) 
+
+The implementation can be found in `model.py`
+
+```python
+    net = images
+
+    net = tf.layers.conv2d(net, 24, [5, 5], strides = 2, **conv_args)
+    net = tf.layers.batch_normalization(net, training=training)
+    net = tf.nn.relu(net)
+    net = tf.layers.dropout(net, rate = params.dropout, training=training)
+
+    net = tf.layers.conv2d(net, 36, [5, 5], strides = 2, **conv_args)
+    net = tf.layers.batch_normalization(net, training=training)
+    net = tf.nn.relu(net)
+    net = tf.layers.dropout(net, rate = params.dropout, training=training)
+
+    net = tf.layers.conv2d(net, 48, [5, 5], strides = 2, **conv_args)
+    net = tf.layers.batch_normalization(net, training=training)
+    net = tf.nn.relu(net)
+    net = tf.layers.dropout(net, rate = params.dropout, training=training)
+
+    net = tf.layers.conv2d(net, 64, [3, 3], **conv_args)
+    net = tf.layers.batch_normalization(net, training=training)
+    net = tf.nn.relu(net)
+    net = tf.layers.dropout(net, rate = params.dropout, training=training)
+
+    net = tf.layers.conv2d(net, 64, [3, 3], **conv_args)
+    net = tf.layers.batch_normalization(net, training=training)
+    net = tf.nn.relu(net)
+    net = tf.layers.dropout(net, rate = params.dropout, training=training)
+
+    net = add_coordinates(net)
+
+    n_objects = np.prod(net.shape[1:-1])
+    n_channels = net.shape[-1]
+    
+    net = tf.reshape(net, [-1, n_channels])
+
+    net = tf.layers.dense(net, 200, **conv_args)
+    net = tf.layers.batch_normalization(net, training=training)
+    net = tf.nn.relu(net)
+    net = tf.layers.dropout(net, rate = params.dropout, training=training)
+
+    # aggregate relations
+    n_channels = net.shape[1]
+    net = tf.reshape(net, [-1, n_objects, n_channels])
+    net = tf.reduce_max(net, axis = 1)
+
+    # calculate global attribute
+    net = tf.layers.dense(net, params.nbins)
 ```
 
-The above command will load the trained model and use the model to make predictions on individual images in real-time and send the predicted angle back to the server via a websocket connection.
+Training HyperParameters:
+---
+To train the model we decide to use a Power Sign Optimizer found in the [Neural Optimizer Search with RL](https://arxiv.org/pdf/1709.07417.pdf) with an amortized learning rate with initial value: 0.000001
 
-Note: There is known local system's setting issue with replacing "," with "." when using drive.py. When this happens it can make predicted steering values clipped to max/min values. If this occurs, a known fix for this is to add "export LANG=en_US.utf8" to the bashrc file.
+We treat this problem as a classification problem in which we break the steering interval into 51 bins, and we use then the cross entropy loss.
 
-#### Saving a video of the autonomous agent
+Since is a classification problem, we make calculations on the Top1/Top5 accuracy:
 
-```sh
-python drive.py model.h5 run1
+![tensorboard accuracy][tensorboard_training]
+
+The losses can be seen:
+
+![tensorboard accuracy][tensorboard_loss]
+
+We export the model (we include a trained model in models) and we finally can do inference with this model
+
+Run and make inference
+---
+Finally with a model trained you can do inference on the simulator. To do that, you just need to run:
+
+```bash
+$ docker-compose up infer
 ```
 
-The fourth argument, `run1`, is the directory in which to save the images seen by the agent. If the directory already exists, it'll be overwritten.
+Enjoy your autonomous model provided by Davidnet (David Cardozo)
 
-```sh
-ls run1
 
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_424.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_451.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_477.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_528.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_573.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_618.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_697.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_723.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_749.jpg
-[2017-01-09 16:10:23 EST]  12KiB 2017_01_09_21_10_23_817.jpg
-...
-```
+Special Thanks
+---
 
-The image file name is a timestamp of when the image was seen. This information is used by `video.py` to create a chronological video of the agent driving.
+Thanks to @cgarciae (Cristian Garcia) for being my mentor!
 
-### `video.py`
 
-```sh
-python video.py run1
-```
 
-Creates a video based on images found in the `run1` directory. The name of the video will be the name of the directory followed by `'.mp4'`, so, in this case the video will be `run1.mp4`.
-
-Optionally, one can specify the FPS (frames per second) of the video:
-
-```sh
-python video.py run1 --fps 48
-```
-
-Will run the video at 48 FPS. The default FPS is 60.
-
-#### Why create a video
-
-1. It's been noted the simulator might perform differently based on the hardware. So if your model drives succesfully on your machine it might not on another machine (your reviewer). Saving a video is a solid backup in case this happens.
-2. You could slightly alter the code in `drive.py` and/or `video.py` to create a video of what your model sees after the image is processed (may be helpful for debugging).
-
-### Tips
-- Please keep in mind that training images are loaded in BGR colorspace using cv2 while drive.py load images in RGB to predict the steering angles.
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
-
+<!-- References images -->
+[image_0]: ./resources/center_2016_12_01_13_32_50_121.jpg
+[image_1]: ./resources/center_2016_12_01_13_31_13_037.jpg 
+[image_2]: ./resources/center_2016_12_01_13_31_14_398.jpg
+[image_3]: ./resources/center_2016_12_01_13_32_42_749.jpg
+[image_4]: ./resources/center_2016_12_01_13_32_49_210.jpg
+[image_5]: ./resources/center_2016_12_01_13_31_14_702.jpg
+[image_6]: ./resources/center_2016_12_01_13_32_52_450.jpg
+[image_7]: ./resources/center_2016_12_01_13_32_53_055.jpg
+[image_8]: ./resources/center_2016_12_01_13_33_16_353.jpg
+[image_9]: ./resources/center_2016_12_01_13_32_52_753.jpg
+[tensorboard_training]: ./resources/tensorboard.png
+[tensorboard_loss]: ./resources/tensorboard_2.png
