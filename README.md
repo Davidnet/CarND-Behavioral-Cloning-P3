@@ -277,6 +277,12 @@ The losses can be seen:
 
 We export the model (we include a trained model in models) and we finally can do inference with this model
 
+to train:
+
+```bash
+docker-compose up train
+```
+
 Run and make inference
 ---
 Finally with a model trained you can do inference on the simulator. To do that, you just need to run:
