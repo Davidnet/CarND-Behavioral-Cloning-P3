@@ -7,9 +7,12 @@ Overview
 
 This repo contains a tensorflow project for the Behavioral Cloning Project, as you can see in the following video we succesfully complete the task of copy the behaviour of a human driver on a track.
 
+Click link: 
+
 [![solution](https://img.youtube.com/vi/VE5MoamYcgM/0.jpg)](https://www.youtube.com/watch?v=VE5MoamYcgM)
 
 
+or see the video.mp4
 
 Pilotnet Module Overview:
 ---
