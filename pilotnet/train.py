@@ -21,11 +21,17 @@ def main(data_dir, job_dir, params):
     print("job_dir", job_dir)
 
 
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+
+
     run_config = tf.estimator.RunConfig(
         model_dir=job_dir,
         save_summary_steps=params.summary_steps,
         save_checkpoints_steps=params.save_checkpoints_steps,
+        session_config=config
     )
+
 
 
     estimator = tf.estimator.Estimator(
